@@ -1,0 +1,1232 @@
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (6.3ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (6.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to DeviseCreateUsers (20180304195238)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime, "remember_created_at" datetime, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" datetime, "last_sign_in_at" datetime, "current_sign_in_ip" varchar, "last_sign_in_ip" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304195238"]]
+  [1m[35m (4.9ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddNameToUsers (20180304195733)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "name" varchar[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304195733"]]
+  [1m[35m (5.6ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateInstruments (20180304201204)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "instruments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "brand" varchar, "model" varchar, "description" text, "condition" varchar, "finish" varchar, "title" varchar, "price" decimal(5,2) DEFAULT 0, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304201204"]]
+  [1m[35m (8.6ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddImageToInstruments (20180304201827)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "instruments" ADD "image" varchar[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304201827"]]
+  [1m[35m (5.9ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddUserIdToInstruments (20180304201925)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "instruments" ADD "user_id" integer[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304201925"]]
+  [1m[35m (6.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateCarts (20180304212219)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "carts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304212219"]]
+  [1m[35m (6.5ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateLineItems (20180304212355)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "line_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "instrument_id" integer, "cart_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_91d8c37bea"
+FOREIGN KEY ("instrument_id")
+  REFERENCES "instruments" ("id")
+, CONSTRAINT "fk_rails_af645e8e5f"
+FOREIGN KEY ("cart_id")
+  REFERENCES "carts" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_line_items_on_instrument_id" ON "line_items" ("instrument_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_line_items_on_instrument_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_line_items_on_instrument_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_line_items_on_cart_id" ON "line_items" ("cart_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304212355"]]
+  [1m[35m (6.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddQuantityToLineItems (20180304213258)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "line_items" ADD "quantity" integer DEFAULT 1[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180304213258"]]
+  [1m[35m (6.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "test"], ["created_at", "2018-12-11 08:21:37.856522"], ["updated_at", "2018-12-11 08:21:37.856522"]]
+  [1m[35m (5.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_line_items_on_cart_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_line_items_on_cart_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_line_items_on_instrument_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_line_items_on_instrument_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.487778', '2018-12-11 08:21:57.487778', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.487778', '2018-12-11 08:21:57.487778', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.490572', '2018-12-11 08:21:57.490572', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.490572', '2018-12-11 08:21:57.490572', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.492155', '2018-12-11 08:21:57.492155', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.492155', '2018-12-11 08:21:57.492155', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.493998', '2018-12-11 08:21:57.493998', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.493998', '2018-12-11 08:21:57.493998', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.583826', '2018-12-11 08:21:57.583826', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.583826', '2018-12-11 08:21:57.583826', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.585206', '2018-12-11 08:21:57.585206', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.585206', '2018-12-11 08:21:57.585206', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.586201', '2018-12-11 08:21:57.586201', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.586201', '2018-12-11 08:21:57.586201', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.587300', '2018-12-11 08:21:57.587300', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.587300', '2018-12-11 08:21:57.587300', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.591675', '2018-12-11 08:21:57.591675', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.591675', '2018-12-11 08:21:57.591675', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.592919', '2018-12-11 08:21:57.592919', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.592919', '2018-12-11 08:21:57.592919', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.593831', '2018-12-11 08:21:57.593831', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.593831', '2018-12-11 08:21:57.593831', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.594997', '2018-12-11 08:21:57.594997', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.594997', '2018-12-11 08:21:57.594997', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.599541', '2018-12-11 08:21:57.599541', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.599541', '2018-12-11 08:21:57.599541', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.607007', '2018-12-11 08:21:57.607007', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.607007', '2018-12-11 08:21:57.607007', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.607929', '2018-12-11 08:21:57.607929', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.607929', '2018-12-11 08:21:57.607929', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.608929', '2018-12-11 08:21:57.608929', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.608929', '2018-12-11 08:21:57.608929', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.613008', '2018-12-11 08:21:57.613008', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.613008', '2018-12-11 08:21:57.613008', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.614268', '2018-12-11 08:21:57.614268', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.614268', '2018-12-11 08:21:57.614268', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.615179', '2018-12-11 08:21:57.615179', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.615179', '2018-12-11 08:21:57.615179', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.616262', '2018-12-11 08:21:57.616262', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.616262', '2018-12-11 08:21:57.616262', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.620361', '2018-12-11 08:21:57.620361', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.620361', '2018-12-11 08:21:57.620361', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.621609', '2018-12-11 08:21:57.621609', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.621609', '2018-12-11 08:21:57.621609', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.622580', '2018-12-11 08:21:57.622580', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.622580', '2018-12-11 08:21:57.622580', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.623650', '2018-12-11 08:21:57.623650', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.623650', '2018-12-11 08:21:57.623650', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.627923', '2018-12-11 08:21:57.627923', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.627923', '2018-12-11 08:21:57.627923', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.629169', '2018-12-11 08:21:57.629169', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.629169', '2018-12-11 08:21:57.629169', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.630143', '2018-12-11 08:21:57.630143', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.630143', '2018-12-11 08:21:57.630143', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.631189', '2018-12-11 08:21:57.631189', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.631189', '2018-12-11 08:21:57.631189', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.635570', '2018-12-11 08:21:57.635570', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.635570', '2018-12-11 08:21:57.635570', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.636847', '2018-12-11 08:21:57.636847', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.636847', '2018-12-11 08:21:57.636847', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.637823', '2018-12-11 08:21:57.637823', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.637823', '2018-12-11 08:21:57.637823', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.638898', '2018-12-11 08:21:57.638898', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.638898', '2018-12-11 08:21:57.638898', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.643071', '2018-12-11 08:21:57.643071', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.643071', '2018-12-11 08:21:57.643071', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.644285', '2018-12-11 08:21:57.644285', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.644285', '2018-12-11 08:21:57.644285', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.645245', '2018-12-11 08:21:57.645245', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.645245', '2018-12-11 08:21:57.645245', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.646349', '2018-12-11 08:21:57.646349', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.646349', '2018-12-11 08:21:57.646349', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.650374', '2018-12-11 08:21:57.650374', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.650374', '2018-12-11 08:21:57.650374', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.651632', '2018-12-11 08:21:57.651632', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.651632', '2018-12-11 08:21:57.651632', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.652541', '2018-12-11 08:21:57.652541', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.652541', '2018-12-11 08:21:57.652541', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.653535', '2018-12-11 08:21:57.653535', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.653535', '2018-12-11 08:21:57.653535', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.657598', '2018-12-11 08:21:57.657598', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.657598', '2018-12-11 08:21:57.657598', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.658881', '2018-12-11 08:21:57.658881', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.658881', '2018-12-11 08:21:57.658881', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.659787', '2018-12-11 08:21:57.659787', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.659787', '2018-12-11 08:21:57.659787', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.660778', '2018-12-11 08:21:57.660778', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.660778', '2018-12-11 08:21:57.660778', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.664835', '2018-12-11 08:21:57.664835', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.664835', '2018-12-11 08:21:57.664835', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.666134', '2018-12-11 08:21:57.666134', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.666134', '2018-12-11 08:21:57.666134', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.667048', '2018-12-11 08:21:57.667048', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.667048', '2018-12-11 08:21:57.667048', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.668106', '2018-12-11 08:21:57.668106', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.668106', '2018-12-11 08:21:57.668106', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.672172', '2018-12-11 08:21:57.672172', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.672172', '2018-12-11 08:21:57.672172', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.673389', '2018-12-11 08:21:57.673389', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.673389', '2018-12-11 08:21:57.673389', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.674333', '2018-12-11 08:21:57.674333', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.674333', '2018-12-11 08:21:57.674333', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.675330', '2018-12-11 08:21:57.675330', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.675330', '2018-12-11 08:21:57.675330', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.679450', '2018-12-11 08:21:57.679450', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.679450', '2018-12-11 08:21:57.679450', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.680715', '2018-12-11 08:21:57.680715', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.680715', '2018-12-11 08:21:57.680715', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.681625', '2018-12-11 08:21:57.681625', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.681625', '2018-12-11 08:21:57.681625', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.682704', '2018-12-11 08:21:57.682704', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.682704', '2018-12-11 08:21:57.682704', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.687115', '2018-12-11 08:21:57.687115', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.687115', '2018-12-11 08:21:57.687115', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.688367', '2018-12-11 08:21:57.688367', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.688367', '2018-12-11 08:21:57.688367', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.689305', '2018-12-11 08:21:57.689305', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.689305', '2018-12-11 08:21:57.689305', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.690361', '2018-12-11 08:21:57.690361', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.690361', '2018-12-11 08:21:57.690361', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.694453', '2018-12-11 08:21:57.694453', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.694453', '2018-12-11 08:21:57.694453', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.695697', '2018-12-11 08:21:57.695697', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.695697', '2018-12-11 08:21:57.695697', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.696616', '2018-12-11 08:21:57.696616', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.696616', '2018-12-11 08:21:57.696616', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.697631', '2018-12-11 08:21:57.697631', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.697631', '2018-12-11 08:21:57.697631', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.701795', '2018-12-11 08:21:57.701795', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.701795', '2018-12-11 08:21:57.701795', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.703092', '2018-12-11 08:21:57.703092', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.703092', '2018-12-11 08:21:57.703092', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.703993', '2018-12-11 08:21:57.703993', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.703993', '2018-12-11 08:21:57.703993', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.705018', '2018-12-11 08:21:57.705018', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.705018', '2018-12-11 08:21:57.705018', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.709145', '2018-12-11 08:21:57.709145', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.709145', '2018-12-11 08:21:57.709145', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.710438', '2018-12-11 08:21:57.710438', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.710438', '2018-12-11 08:21:57.710438', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.711364', '2018-12-11 08:21:57.711364', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.711364', '2018-12-11 08:21:57.711364', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.712406', '2018-12-11 08:21:57.712406', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.712406', '2018-12-11 08:21:57.712406', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.716463', '2018-12-11 08:21:57.716463', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.716463', '2018-12-11 08:21:57.716463', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.717842', '2018-12-11 08:21:57.717842', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.717842', '2018-12-11 08:21:57.717842', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.718825', '2018-12-11 08:21:57.718825', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.718825', '2018-12-11 08:21:57.718825', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.719850', '2018-12-11 08:21:57.719850', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.719850', '2018-12-11 08:21:57.719850', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.723942', '2018-12-11 08:21:57.723942', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.723942', '2018-12-11 08:21:57.723942', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.725184', '2018-12-11 08:21:57.725184', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.725184', '2018-12-11 08:21:57.725184', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.726126', '2018-12-11 08:21:57.726126', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.726126', '2018-12-11 08:21:57.726126', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.727179', '2018-12-11 08:21:57.727179', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.727179', '2018-12-11 08:21:57.727179', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.731251', '2018-12-11 08:21:57.731251', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.731251', '2018-12-11 08:21:57.731251', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.732497', '2018-12-11 08:21:57.732497', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.732497', '2018-12-11 08:21:57.732497', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.733405', '2018-12-11 08:21:57.733405', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.733405', '2018-12-11 08:21:57.733405', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.734480', '2018-12-11 08:21:57.734480', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.734480', '2018-12-11 08:21:57.734480', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.738825', '2018-12-11 08:21:57.738825', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:21:57.738825', '2018-12-11 08:21:57.738825', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.740062', '2018-12-11 08:21:57.740062', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.740062', '2018-12-11 08:21:57.740062', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.740961', '2018-12-11 08:21:57.740961', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:21:57.740961', '2018-12-11 08:21:57.740961', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.742019', '2018-12-11 08:21:57.742019', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:21:57.742019', '2018-12-11 08:21:57.742019', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.2ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:37.926159', '2018-12-11 08:24:37.926159', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:37.926159', '2018-12-11 08:24:37.926159', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:37.929030', '2018-12-11 08:24:37.929030', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:37.929030', '2018-12-11 08:24:37.929030', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:37.930695', '2018-12-11 08:24:37.930695', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:37.930695', '2018-12-11 08:24:37.930695', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:37.932473', '2018-12-11 08:24:37.932473', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:37.932473', '2018-12-11 08:24:37.932473', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.022279', '2018-12-11 08:24:38.022279', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.022279', '2018-12-11 08:24:38.022279', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.023628', '2018-12-11 08:24:38.023628', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.023628', '2018-12-11 08:24:38.023628', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.024563', '2018-12-11 08:24:38.024563', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.024563', '2018-12-11 08:24:38.024563', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.025630', '2018-12-11 08:24:38.025630', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.025630', '2018-12-11 08:24:38.025630', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.030017', '2018-12-11 08:24:38.030017', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.030017', '2018-12-11 08:24:38.030017', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.031271', '2018-12-11 08:24:38.031271', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.031271', '2018-12-11 08:24:38.031271', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.032201', '2018-12-11 08:24:38.032201', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.032201', '2018-12-11 08:24:38.032201', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.033285', '2018-12-11 08:24:38.033285', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.033285', '2018-12-11 08:24:38.033285', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.037888', '2018-12-11 08:24:38.037888', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.037888', '2018-12-11 08:24:38.037888', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.045546', '2018-12-11 08:24:38.045546', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.045546', '2018-12-11 08:24:38.045546', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.046543', '2018-12-11 08:24:38.046543', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.046543', '2018-12-11 08:24:38.046543', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.047587', '2018-12-11 08:24:38.047587', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.047587', '2018-12-11 08:24:38.047587', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.051774', '2018-12-11 08:24:38.051774', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.051774', '2018-12-11 08:24:38.051774', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.052983', '2018-12-11 08:24:38.052983', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.052983', '2018-12-11 08:24:38.052983', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.053929', '2018-12-11 08:24:38.053929', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.053929', '2018-12-11 08:24:38.053929', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.054972', '2018-12-11 08:24:38.054972', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.054972', '2018-12-11 08:24:38.054972', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.059284', '2018-12-11 08:24:38.059284', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.059284', '2018-12-11 08:24:38.059284', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.060506', '2018-12-11 08:24:38.060506', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.060506', '2018-12-11 08:24:38.060506', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.061415', '2018-12-11 08:24:38.061415', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.061415', '2018-12-11 08:24:38.061415', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.062501', '2018-12-11 08:24:38.062501', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.062501', '2018-12-11 08:24:38.062501', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.066799', '2018-12-11 08:24:38.066799', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.066799', '2018-12-11 08:24:38.066799', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.068051', '2018-12-11 08:24:38.068051', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.068051', '2018-12-11 08:24:38.068051', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.068965', '2018-12-11 08:24:38.068965', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.068965', '2018-12-11 08:24:38.068965', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.070051', '2018-12-11 08:24:38.070051', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.070051', '2018-12-11 08:24:38.070051', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.074221', '2018-12-11 08:24:38.074221', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.074221', '2018-12-11 08:24:38.074221', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.075517', '2018-12-11 08:24:38.075517', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.075517', '2018-12-11 08:24:38.075517', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.076489', '2018-12-11 08:24:38.076489', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.076489', '2018-12-11 08:24:38.076489', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.077497', '2018-12-11 08:24:38.077497', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.077497', '2018-12-11 08:24:38.077497', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.082017', '2018-12-11 08:24:38.082017', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.082017', '2018-12-11 08:24:38.082017', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.083259', '2018-12-11 08:24:38.083259', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.083259', '2018-12-11 08:24:38.083259', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.084175', '2018-12-11 08:24:38.084175', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.084175', '2018-12-11 08:24:38.084175', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.085192', '2018-12-11 08:24:38.085192', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.085192', '2018-12-11 08:24:38.085192', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.089329', '2018-12-11 08:24:38.089329', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.089329', '2018-12-11 08:24:38.089329', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.090659', '2018-12-11 08:24:38.090659', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.090659', '2018-12-11 08:24:38.090659', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.091584', '2018-12-11 08:24:38.091584', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.091584', '2018-12-11 08:24:38.091584', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.092602', '2018-12-11 08:24:38.092602', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.092602', '2018-12-11 08:24:38.092602', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.096652', '2018-12-11 08:24:38.096652', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.096652', '2018-12-11 08:24:38.096652', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.097932', '2018-12-11 08:24:38.097932', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.097932', '2018-12-11 08:24:38.097932', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.098935', '2018-12-11 08:24:38.098935', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.098935', '2018-12-11 08:24:38.098935', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.099994', '2018-12-11 08:24:38.099994', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.099994', '2018-12-11 08:24:38.099994', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.104077', '2018-12-11 08:24:38.104077', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.104077', '2018-12-11 08:24:38.104077', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.105410', '2018-12-11 08:24:38.105410', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.105410', '2018-12-11 08:24:38.105410', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.106392', '2018-12-11 08:24:38.106392', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.106392', '2018-12-11 08:24:38.106392', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.107465', '2018-12-11 08:24:38.107465', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.107465', '2018-12-11 08:24:38.107465', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.111603', '2018-12-11 08:24:38.111603', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.111603', '2018-12-11 08:24:38.111603', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.112787', '2018-12-11 08:24:38.112787', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.112787', '2018-12-11 08:24:38.112787', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.113712', '2018-12-11 08:24:38.113712', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.113712', '2018-12-11 08:24:38.113712', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.114781', '2018-12-11 08:24:38.114781', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.114781', '2018-12-11 08:24:38.114781', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.118892', '2018-12-11 08:24:38.118892', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.118892', '2018-12-11 08:24:38.118892', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.120157', '2018-12-11 08:24:38.120157', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.120157', '2018-12-11 08:24:38.120157', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.121043', '2018-12-11 08:24:38.121043', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.121043', '2018-12-11 08:24:38.121043', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.122132', '2018-12-11 08:24:38.122132', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.122132', '2018-12-11 08:24:38.122132', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.126253', '2018-12-11 08:24:38.126253', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.126253', '2018-12-11 08:24:38.126253', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.127542', '2018-12-11 08:24:38.127542', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.127542', '2018-12-11 08:24:38.127542', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.128451', '2018-12-11 08:24:38.128451', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.128451', '2018-12-11 08:24:38.128451', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.129418', '2018-12-11 08:24:38.129418', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.129418', '2018-12-11 08:24:38.129418', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.133928', '2018-12-11 08:24:38.133928', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.133928', '2018-12-11 08:24:38.133928', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.135270', '2018-12-11 08:24:38.135270', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.135270', '2018-12-11 08:24:38.135270', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.136231', '2018-12-11 08:24:38.136231', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.136231', '2018-12-11 08:24:38.136231', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.137249', '2018-12-11 08:24:38.137249', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.137249', '2018-12-11 08:24:38.137249', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.141362', '2018-12-11 08:24:38.141362', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.141362', '2018-12-11 08:24:38.141362', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.142670', '2018-12-11 08:24:38.142670', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.142670', '2018-12-11 08:24:38.142670', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.143594', '2018-12-11 08:24:38.143594', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.143594', '2018-12-11 08:24:38.143594', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.144603', '2018-12-11 08:24:38.144603', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.144603', '2018-12-11 08:24:38.144603', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.148880', '2018-12-11 08:24:38.148880', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.148880', '2018-12-11 08:24:38.148880', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.150199', '2018-12-11 08:24:38.150199', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.150199', '2018-12-11 08:24:38.150199', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.151131', '2018-12-11 08:24:38.151131', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.151131', '2018-12-11 08:24:38.151131', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.152137', '2018-12-11 08:24:38.152137', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.152137', '2018-12-11 08:24:38.152137', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.156322', '2018-12-11 08:24:38.156322', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.156322', '2018-12-11 08:24:38.156322', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.157605', '2018-12-11 08:24:38.157605', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.157605', '2018-12-11 08:24:38.157605', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.158603', '2018-12-11 08:24:38.158603', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.158603', '2018-12-11 08:24:38.158603', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.159607', '2018-12-11 08:24:38.159607', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.159607', '2018-12-11 08:24:38.159607', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.163736', '2018-12-11 08:24:38.163736', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.163736', '2018-12-11 08:24:38.163736', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.165041', '2018-12-11 08:24:38.165041', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.165041', '2018-12-11 08:24:38.165041', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.165938', '2018-12-11 08:24:38.165938', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.165938', '2018-12-11 08:24:38.165938', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.167007', '2018-12-11 08:24:38.167007', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.167007', '2018-12-11 08:24:38.167007', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.171227', '2018-12-11 08:24:38.171227', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.171227', '2018-12-11 08:24:38.171227', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.172455', '2018-12-11 08:24:38.172455', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.172455', '2018-12-11 08:24:38.172455', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.173377', '2018-12-11 08:24:38.173377', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.173377', '2018-12-11 08:24:38.173377', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.174478', '2018-12-11 08:24:38.174478', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.174478', '2018-12-11 08:24:38.174478', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.178710', '2018-12-11 08:24:38.178710', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 08:24:38.178710', '2018-12-11 08:24:38.178710', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.180003', '2018-12-11 08:24:38.180003', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.180003', '2018-12-11 08:24:38.180003', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.180884', '2018-12-11 08:24:38.180884', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 08:24:38.180884', '2018-12-11 08:24:38.180884', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.181879', '2018-12-11 08:24:38.181879', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 08:24:38.181879', '2018-12-11 08:24:38.181879', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.819888', '2018-12-11 09:36:22.819888', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.819888', '2018-12-11 09:36:22.819888', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.822595', '2018-12-11 09:36:22.822595', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.822595', '2018-12-11 09:36:22.822595', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.824111', '2018-12-11 09:36:22.824111', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.824111', '2018-12-11 09:36:22.824111', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.825827', '2018-12-11 09:36:22.825827', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.825827', '2018-12-11 09:36:22.825827', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.921457', '2018-12-11 09:36:22.921457', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.921457', '2018-12-11 09:36:22.921457', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.922868', '2018-12-11 09:36:22.922868', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.922868', '2018-12-11 09:36:22.922868', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.923735', '2018-12-11 09:36:22.923735', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.923735', '2018-12-11 09:36:22.923735', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.924731', '2018-12-11 09:36:22.924731', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.924731', '2018-12-11 09:36:22.924731', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.928811', '2018-12-11 09:36:22.928811', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.928811', '2018-12-11 09:36:22.928811', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.930046', '2018-12-11 09:36:22.930046', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.930046', '2018-12-11 09:36:22.930046', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.930928', '2018-12-11 09:36:22.930928', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.930928', '2018-12-11 09:36:22.930928', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.931913', '2018-12-11 09:36:22.931913', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.931913', '2018-12-11 09:36:22.931913', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.935874', '2018-12-11 09:36:22.935874', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.935874', '2018-12-11 09:36:22.935874', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.937110', '2018-12-11 09:36:22.937110', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.937110', '2018-12-11 09:36:22.937110', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.938106', '2018-12-11 09:36:22.938106', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.938106', '2018-12-11 09:36:22.938106', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.939104', '2018-12-11 09:36:22.939104', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.939104', '2018-12-11 09:36:22.939104', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.943115', '2018-12-11 09:36:22.943115', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.943115', '2018-12-11 09:36:22.943115', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.944312', '2018-12-11 09:36:22.944312', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.944312', '2018-12-11 09:36:22.944312', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.945213', '2018-12-11 09:36:22.945213', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.945213', '2018-12-11 09:36:22.945213', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.946250', '2018-12-11 09:36:22.946250', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.946250', '2018-12-11 09:36:22.946250', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.950215', '2018-12-11 09:36:22.950215', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.950215', '2018-12-11 09:36:22.950215', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.951433', '2018-12-11 09:36:22.951433', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.951433', '2018-12-11 09:36:22.951433', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.952325', '2018-12-11 09:36:22.952325', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.952325', '2018-12-11 09:36:22.952325', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.953293', '2018-12-11 09:36:22.953293', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.953293', '2018-12-11 09:36:22.953293', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.957256', '2018-12-11 09:36:22.957256', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.957256', '2018-12-11 09:36:22.957256', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.958477', '2018-12-11 09:36:22.958477', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.958477', '2018-12-11 09:36:22.958477', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.959355', '2018-12-11 09:36:22.959355', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.959355', '2018-12-11 09:36:22.959355', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.960357', '2018-12-11 09:36:22.960357', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.960357', '2018-12-11 09:36:22.960357', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.964300', '2018-12-11 09:36:22.964300', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.964300', '2018-12-11 09:36:22.964300', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.965502', '2018-12-11 09:36:22.965502', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.965502', '2018-12-11 09:36:22.965502', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.966402', '2018-12-11 09:36:22.966402', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.966402', '2018-12-11 09:36:22.966402', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.967389', '2018-12-11 09:36:22.967389', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.967389', '2018-12-11 09:36:22.967389', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.971579', '2018-12-11 09:36:22.971579', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.971579', '2018-12-11 09:36:22.971579', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.972800', '2018-12-11 09:36:22.972800', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.972800', '2018-12-11 09:36:22.972800', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.973748', '2018-12-11 09:36:22.973748', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.973748', '2018-12-11 09:36:22.973748', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.974792', '2018-12-11 09:36:22.974792', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.974792', '2018-12-11 09:36:22.974792', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.978892', '2018-12-11 09:36:22.978892', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.978892', '2018-12-11 09:36:22.978892', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.980069', '2018-12-11 09:36:22.980069', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.980069', '2018-12-11 09:36:22.980069', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.980969', '2018-12-11 09:36:22.980969', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.980969', '2018-12-11 09:36:22.980969', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.981926', '2018-12-11 09:36:22.981926', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.981926', '2018-12-11 09:36:22.981926', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.986060', '2018-12-11 09:36:22.986060', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.986060', '2018-12-11 09:36:22.986060', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.987284', '2018-12-11 09:36:22.987284', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.987284', '2018-12-11 09:36:22.987284', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.988156', '2018-12-11 09:36:22.988156', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.988156', '2018-12-11 09:36:22.988156', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.989181', '2018-12-11 09:36:22.989181', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.989181', '2018-12-11 09:36:22.989181', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.993051', '2018-12-11 09:36:22.993051', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.993051', '2018-12-11 09:36:22.993051', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.994244', '2018-12-11 09:36:22.994244', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.994244', '2018-12-11 09:36:22.994244', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.995182', '2018-12-11 09:36:22.995182', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:22.995182', '2018-12-11 09:36:22.995182', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.996098', '2018-12-11 09:36:22.996098', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:22.996098', '2018-12-11 09:36:22.996098', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.999996', '2018-12-11 09:36:22.999996', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:22.999996', '2018-12-11 09:36:22.999996', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.001212', '2018-12-11 09:36:23.001212', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.001212', '2018-12-11 09:36:23.001212', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.002123', '2018-12-11 09:36:23.002123', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.002123', '2018-12-11 09:36:23.002123', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.003112', '2018-12-11 09:36:23.003112', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.003112', '2018-12-11 09:36:23.003112', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.007050', '2018-12-11 09:36:23.007050', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.007050', '2018-12-11 09:36:23.007050', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.008251', '2018-12-11 09:36:23.008251', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.008251', '2018-12-11 09:36:23.008251', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.009123', '2018-12-11 09:36:23.009123', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.009123', '2018-12-11 09:36:23.009123', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.010166', '2018-12-11 09:36:23.010166', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.010166', '2018-12-11 09:36:23.010166', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.014175', '2018-12-11 09:36:23.014175', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.014175', '2018-12-11 09:36:23.014175', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.015414', '2018-12-11 09:36:23.015414', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.015414', '2018-12-11 09:36:23.015414', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.016312', '2018-12-11 09:36:23.016312', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.016312', '2018-12-11 09:36:23.016312', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.017335', '2018-12-11 09:36:23.017335', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.017335', '2018-12-11 09:36:23.017335', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.021643', '2018-12-11 09:36:23.021643', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.021643', '2018-12-11 09:36:23.021643', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.022893', '2018-12-11 09:36:23.022893', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.022893', '2018-12-11 09:36:23.022893', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.023784', '2018-12-11 09:36:23.023784', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.023784', '2018-12-11 09:36:23.023784', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.024788', '2018-12-11 09:36:23.024788', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.024788', '2018-12-11 09:36:23.024788', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.028839', '2018-12-11 09:36:23.028839', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.028839', '2018-12-11 09:36:23.028839', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.030092', '2018-12-11 09:36:23.030092', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.030092', '2018-12-11 09:36:23.030092', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.031005', '2018-12-11 09:36:23.031005', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.031005', '2018-12-11 09:36:23.031005', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.032026', '2018-12-11 09:36:23.032026', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.032026', '2018-12-11 09:36:23.032026', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.036063', '2018-12-11 09:36:23.036063', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.036063', '2018-12-11 09:36:23.036063', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.037302', '2018-12-11 09:36:23.037302', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.037302', '2018-12-11 09:36:23.037302', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.038249', '2018-12-11 09:36:23.038249', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.038249', '2018-12-11 09:36:23.038249', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.039271', '2018-12-11 09:36:23.039271', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.039271', '2018-12-11 09:36:23.039271', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.043248', '2018-12-11 09:36:23.043248', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.043248', '2018-12-11 09:36:23.043248', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.044440', '2018-12-11 09:36:23.044440', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.044440', '2018-12-11 09:36:23.044440', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.045300', '2018-12-11 09:36:23.045300', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.045300', '2018-12-11 09:36:23.045300', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.046330', '2018-12-11 09:36:23.046330', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.046330', '2018-12-11 09:36:23.046330', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.050320', '2018-12-11 09:36:23.050320', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.050320', '2018-12-11 09:36:23.050320', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.051485', '2018-12-11 09:36:23.051485', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.051485', '2018-12-11 09:36:23.051485', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.052403', '2018-12-11 09:36:23.052403', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.052403', '2018-12-11 09:36:23.052403', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.053362', '2018-12-11 09:36:23.053362', 980190962)[0m
+  [1m[36mFixture Insert (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.053362', '2018-12-11 09:36:23.053362', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.2ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.057459', '2018-12-11 09:36:23.057459', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.057459', '2018-12-11 09:36:23.057459', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.058697', '2018-12-11 09:36:23.058697', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.058697', '2018-12-11 09:36:23.058697', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.059577', '2018-12-11 09:36:23.059577', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.059577', '2018-12-11 09:36:23.059577', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.060591', '2018-12-11 09:36:23.060591', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.060591', '2018-12-11 09:36:23.060591', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "instruments"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.064656', '2018-12-11 09:36:23.064656', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "instruments" ("brand", "model", "description", "condition", "finish", "title", "price", "created_at", "updated_at", "id") VALUES ('MyString', 'MyString', 'MyText', 'MyString', 'MyString', 'MyString', 9.99, '2018-12-11 09:36:23.064656', '2018-12-11 09:36:23.064656', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "carts"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.065860', '2018-12-11 09:36:23.065860', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "carts" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.065860', '2018-12-11 09:36:23.065860', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "line_items"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.066834', '2018-12-11 09:36:23.066834', 980190962, 980190962, 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "line_items" ("created_at", "updated_at", "id", "instrument_id", "cart_id") VALUES ('2018-12-11 09:36:23.066834', '2018-12-11 09:36:23.066834', 298486374, 298486374, 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.067781', '2018-12-11 09:36:23.067781', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2018-12-11 09:36:23.067781', '2018-12-11 09:36:23.067781', 298486374)[0m
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
